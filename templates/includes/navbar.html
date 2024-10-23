@@ -16,12 +16,16 @@
                 Chicago, USA</span>
         </div>
         <div class="flex items-center space-x-4">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'account_logout' %}" class="text-xs font-thin hover:underline">Sign out</a>
+            {% else %}
             <a href="tel:5541251234" class="text-xs font-thin">(555) 412-1234</a>
             <span>
                 <a href="{% url 'account_signup' %}" class="text-xs font-thin hover:underline">Signup</a>
                 <span class="font-thin">/</span>
                 <a href="{% url 'account_login' %}" class="text-xs font-thin hover:underline">Signin</a>
             </span>
+            {% endif %}
         </div>
     </div>
 </nav>

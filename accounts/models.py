@@ -5,7 +5,16 @@ from django.db import models
 from shop.models import Product
 
 class CustomUser(AbstractUser):
-    profile_image = models.ImageField(default="", upload_to="profile_image")
+    profile_image = models.ImageField(default="default_user.jpg", upload_to="profile_image")
+
+
+    @property
+    def image_url(self):
+        if self.profile_image and hasattr(self.profile_image, 'url'):
+            return self.photo.url
+        else:
+            return "/static/images/user.jpg"
+
 
     def __str__(self):
         return self.email

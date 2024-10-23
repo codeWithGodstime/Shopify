@@ -7,67 +7,79 @@
 <section class="grid gap-4">
     <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8">
         <section class="bg-white dark:bg-gray-900">
-            <div class="py-2 px-4 mx-auto max-w-2xl lg:py-4">
+            <div class="py-2 px-2 mx-auto max-w-2xl lg:py-2">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">User Account Profile</h2>
-                <form action="" method="post">
-                    {{profile_change_form}}
+
+                <form action="{% url 'profile-update' %}" class="grid grid-cols-2 gap-4" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                        <div class="sm:col-span-2">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
+                                name</label>
+                            <input type="text" name="first_name" value="{{profile_form_data.first_name}}" id="name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="first name" required="">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+                                name</label>
+                            <input type="text" name="last_name" value="{{profile_form_data.last_name}}" id="brand"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="last name" required="">
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="brand"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                            <input type="email" value="{{profile_form_data.email}}" name="email" id="brand"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Email" required="">
+                        </div>
+
+                        <button type="submit"
+                            class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary rounded-lg focus:ring-4 focus:ring-primary dark:focus:ring-primary hover:bg-primary-hard">
+                            Edit Profile
+                        </button>
+                    </div>
+
+                    <div class="flex justify-baseline align-center flex-col gap-4">
+
+                        <img class="rounded-full w-45 h-45"
+                            src="{{profile_form_data.image_url}}" alt="image description">
+
+                        <div class="">
+                            <!-- Hidden file input -->
+                            <input type="file" id="fileInput" name="profile_image" class="hidden" />
+
+                            <!-- Button to trigger the file input -->
+                            <button type="button" id="uploadButton"
+                                class="bg-primary text-white py-2 px-4 rounded-fullhover:bg-primary focus:outline-none mx-auto w-full">
+                                Upload File
+                            </button>
+                        </div>
+
+                        <script>
+                            // Get references to the button and file input elements
+                            const uploadButton = document.getElementById('uploadButton');
+                            const fileInput = document.getElementById('fileInput');
+
+                            // Add click event listener to the button
+                            uploadButton.addEventListener('click', function () {
+                                // Trigger the click event of the hidden file input
+                                fileInput.click();
+                            });
+
+                            // Optional: Add change event to the file input to handle the file selection
+                            fileInput.addEventListener('change', function (event) {
+                                const file = event.target.files[0];
+                                // if (file) {
+                                //     alert(`File selected: ${file.name}`);
+                                // }
+                            });
+                        </script>
+                    </div>
                 </form>
-                <!-- <form action="#">
-                <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
-                    <div class="sm:col-span-2">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product
-                            Name</label>
-                        <input type="text" name="name" id="name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type product name" required="">
-                    </div>
-                    <div class="w-full">
-                        <label for="brand"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Brand</label>
-                        <input type="text" name="brand" id="brand"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Product brand" required="">
-                    </div>
-                    <div class="w-full">
-                        <label for="price"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                        <input type="number" name="price" id="price"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="$2999" required="">
-                    </div>
-                    <div>
-                        <label for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
-                        <select id="category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select category</option>
-                            <option value="TV">TV/Monitors</option>
-                            <option value="PC">PC</option>
-                            <option value="GA">Gaming/Console</option>
-                            <option value="PH">Phones</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="item-weight"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Weight
-                            (kg)</label>
-                        <input type="number" name="item-weight" id="item-weight"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="12" required="">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label for="description"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        <textarea id="description" rows="8"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Your description here"></textarea>
-                    </div>
-                </div>
-                <button type="submit"
-                    class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
-                    Add product
-                </button>
-            </form> -->
             </div>
         </section>
     </div>
@@ -76,9 +88,49 @@
         <section class="bg-white dark:bg-gray-900">
             <div class="py-2 px-4 mx-auto max-w-2xl lg:py-4">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Billing Address</h2>
-                <form action="" method="post">
-                    {{billing_address_form}}
-                </form>
+
+                <section class="bg-white dark:bg-gray-900">
+                    <div class="py-4 px-2 mx-auto max-w-2xl lg:py-4">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                                <div class="sm:col-span-2">
+                                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City</label>
+                                    <input type="text" value="{{billing_address_data.address_line_1}}" name="city" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="City" required="">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Country</label>
+                                    <select id="country" value="{{billing_address_data.country}}" name="country" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                        <option selected="">Select Country</option>
+                                        <option value="nigeria">Nigeria</option>
+                                    </select>
+                                </div>
+                                <div class="w-full">
+                                    <label for="address_line_1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address Line 1</label>
+                                    <input type="text" value="{{billing_address_data.address_line_1}}" name="address_line_1" id="address_line_1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary dark:focus:border-primary" placeholder="Address line 1" required="">
+                                </div>
+                                <div class="w-full">
+                                    <label for="address_line_2" class="block mb-2 text-sm font-medium text-gray-900">Address Line 2</label>
+                                    <input type="text" value="{{billing_address_data.address_line_1}}" name="address_line_2" id="address_line_2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="address line 2" required="">
+                                </div>
+                                
+                                <div class="w-full">
+                                    <label for="state" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">State</label>
+                                    <input type="text" value="{{billing_address_data.state}}" name="state" id="state" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Address line 1" required="">
+                                </div>
+                                
+                                <div>
+                                    <label for="postal_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Postal Code</label>
+                                    <input type="text" value="{{billing_address_data.postal_code}}" name="postal_code" id="postal_code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Postal code" required="">
+                                </div> 
+
+                            </div>
+                            <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary rounded-full focus:ring-4 focus:ring-primary dark:focus:ring-primary hover:bg-primary-hard">
+                                Update Billing Address
+                            </button>
+                        </form>
+                    </div>
+                  </section>
 
             </div>
         </section>
@@ -88,8 +140,11 @@
         <section class="bg-white dark:bg-gray-900">
             <div class="py-2 px-4 mx-auto max-w-2xl lg:py-4">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Change password</h2>
-                <form action="" method="post">
+                <form action="{% url 'account_change_password' %}" method="post">
                     {{change_password_form}}
+                    <button type="submit" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary rounded-full focus:ring-4 focus:ring-primary dark:focus:ring-primary hover:bg-primary-hard">
+                        Change password
+                    </button>
                 </form>
 
             </div>
