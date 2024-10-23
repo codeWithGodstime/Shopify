@@ -1,78 +1,106 @@
+{% load static %}
 
-
-<footer class="bg-white dark:bg-gray-900">
+<footer class="bg-green_gray-900 text-white pt-40 bg-[url({% static 'src/images/footer/left.png' %})] bg-contain bg-no-repeat">
     <div class="mx-auto w-full max-w-screen-xl">
-      <div class="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-4">
+      <div class="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
         <div>
-            <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Company</h2>
-            <ul class="text-gray-500 dark:text-gray-400 font-medium">
+            <h2 class="mb-6 capitalize text-xl">About Shopery</h2>
+
+            <p class="text-gray-200 font-light">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis, voluptatum ipsum. praesentium animi!
+            </p>
+
+            <div class="flex gap-4 mt-3">
+                <a href="" class="text border-b-2 pb-2 border-primary">(219) 552-344</a>
+
+                <span class="text-gray-700">or</span>
+
+                <a href="" class="text border-b-2 pb-2 border-primary">Proxy@gmail.com</a>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="mb-6 capitalize text-xl">My Account</h2>
+
+            <ul class="text-gray-500 font-medium">
                 <li class="mb-4">
-                    <a href="#" class=" hover:underline">About</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">My Account</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Careers</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">Order history</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Brand Center</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">shopping cart</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Blog</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">wishlist</a>
+                </li>
+
+                <li class="mb-4">
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">settings</a>
                 </li>
             </ul>
         </div>
+
         <div>
-            <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Help center</h2>
-            <ul class="text-gray-500 dark:text-gray-400 font-medium">
+            <h2 class="mb-6 capitalize text-xl">Helps</h2>
+
+            <ul class="text-gray-500 font-medium">
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Discord Server</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">Contact</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Twitter</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">Faqs</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Facebook</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">terms & condition</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Contact Us</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">Privacy policy</a>
                 </li>
             </ul>
         </div>
+
         <div>
-            <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
-            <ul class="text-gray-500 dark:text-gray-400 font-medium">
+            <h2 class="mb-6 capitalize text-xl">Proxy</h2>
+
+            <ul class="text-gray-500 font-medium">
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">About</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Licensing</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">shop</a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="hover:underline">Terms &amp; Conditions</a>
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">product</a>
+                </li>
+                <li class="mb-4">
+                    <a href="#" class="capitalize text-gray-300 hover:text-white hover:font-bold font-light">products details</a>
+                </li>
+                <li class="mb-4">
+                    <a href="#" class="capitalize text-green_gray-300 hover:text-white hover:font-bold font-light">track order</a>
                 </li>
             </ul>
         </div>
+
         <div>
-            <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Download</h2>
-            <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                <li class="mb-4">
-                    <a href="#" class="hover:underline">iOS</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="hover:underline">Android</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="hover:underline">Windows</a>
-                </li>
-                <li class="mb-4">
-                    <a href="#" class="hover:underline">MacOS</a>
-                </li>
-            </ul>
+            <h2 class="mb-6 capitalize text-xl">Instagram</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2">
+                <img src="{% static 'src/images/footer/footer-1.png' %}" alt="">
+                <img src="{% static 'src/images/footer/footer-2.png' %}" alt="">
+                <img src="{% static 'src/images/footer/footer-3.png' %}" alt="">
+                <img src="{% static 'src/images/footer/footer-4.png' %}" alt="">
+                <img src="{% static 'src/images/footer/footer-5.png' %}" alt="">
+                <img src="{% static 'src/images/footer/footer-6.png' %}" alt="">
+                <img src="{% static 'src/images/footer/footer-7.png' %}" alt="">
+                <img src="{% static 'src/images/footer/footer-8.png' %}" alt="">
+            </div>
         </div>
+
     </div>
-    <div class="px-4 py-6 bg-gray-100 dark:bg-gray-700 md:flex md:items-center md:justify-between">
-        <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center">© 2023 <a href="https://flowbite.com/">Flowbite™</a>. All Rights Reserved.
-        </span>
-        <div class="flex mt-4 sm:justify-center md:mt-0 space-x-5 rtl:space-x-reverse">
+    <div class="px-4 py-6 border-t-[.2px] border-gray md:flex md:items-center md:justify-between">
+        <div class="flex mt-4 sm:justify-center md:mt-0 space-x-5">
             <a href="#" class="text-gray-400 hover:text-gray-900 dark:hover:text-white">
                   <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 8 19">
                         <path fill-rule="evenodd" d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z" clip-rule="evenodd"/>
@@ -104,6 +132,30 @@
                   <span class="sr-only">Dribbble account</span>
               </a>
         </div>
+
+        <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center">© 2024 <a href="">Shopery</a>. All Rights Reserved.
+        </span>
+
+        <div class="flex mt-4 sm:justify-center md:mt-0 space-x-5">
+
+              <a href="#" class="">
+                <img src="{% static 'src/images/footer/ApplePay.svg' %}" alt="">
+                  <span class="sr-only">Discord community</span>
+              </a>
+              <a href="#" class="">
+                <img src="{% static 'src/images/footer/Discover.svg' %}" alt="">
+                  <span class="sr-only">Twitter page</span>
+              </a>
+              <a href="#" class="">
+                  <img src="{% static 'src/images/footer/Mastercard.svg' %}" alt="">
+                  <span class="sr-only">GitHub account</span>
+              </a>
+              <a href="#" class="">
+                  <img src="{% static 'src/images/footer/visa-logo.svg' %}" alt="">
+                  <span class="sr-only">Dribbble account</span>
+              </a>
+        </div>
+        
       </div>
     </div>
 </footer>
