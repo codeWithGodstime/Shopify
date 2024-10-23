@@ -1,0 +1,164 @@
+{% load static %}
+{% load custom_tags %}
+
+<nav class="bg-gray-900 text-white">
+    <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl py-2 px-4">
+        <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 17 21">
+                <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                    <path d="M8 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                    <path
+                        d="M13.8 12.938h-.01a7 7 0 1 0-11.465.144h-.016l.141.17c.1.128.2.252.3.372L8 20l5.13-6.248c.193-.209.373-.429.54-.66l.13-.154Z" />
+                </g>
+            </svg>
+            <span class="self-center text-xs font-thin whitespace-nowrap">Store Location: Lincoln- 344, Illinois,
+                Chicago, USA</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <a href="tel:5541251234" class="text-xs font-thin">(555) 412-1234</a>
+            <span>
+                <a href="{% url 'account_signup' %}" class="text-xs font-thin hover:underline">Signup</a>
+                <span class="font-thin">/</span>
+                <a href="{% url 'account_login' %}" class="text-xs font-thin hover:underline">Signin</a>
+            </span>
+        </div>
+    </div>
+</nav>
+
+
+<nav class="bg-white border-gray-200">
+    <div class="max-w-screen-xl flex flex-wrap gap-5 items-center justify-between mx-auto py-2 px-4">
+        <a href="/" class="flex items-center space-x-3">
+            <span class="self-center text-2xl font-semibold whitespace-nowrap sr-only">logo</span>
+        </a>
+
+        <div class="flex">
+
+            <!-- for mobile screens -->
+            <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search"
+                aria-expanded="false" class="md:hidden text-gray-500 rounded-lg text-sm p-2.5 me-1">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+                <span class="sr-only">Search</span>
+            </button>
+
+            <div class="relative hidden md:block grow">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                    <span class="sr-only">Search icon</span>
+                </div>
+                <form action="" class="flex items-center" method="post">
+                    {% csrf_token %}
+                    <input type="text" id="search-navbar"
+                        class="block w-full p-2 ps-10 text-sm border border-gray-100 text-gray-900 bg-gray-100 focus:ring-primary focus:bg-white focus:border-primary"
+                        placeholder="Search...">
+                    {% Button type='submit' text='search' size='medium' is_rounded=False %}
+                </form>
+
+            </div>
+            <button data-collapse-toggle="navbar-search" type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                aria-controls="navbar-search" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- mobile form -->
+        <div class="items-center justify-between hidden w-full md:flex md:w-auto" id="navbar-search">
+            <div class="relative mt-3 md:hidden">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                </div>
+
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="search" id="search-navbar"
+                        class="block w-full p-2 ps-10 text-sm border border-gray-100 text-gray-900 bg-gray-100 focus:ring-primary focus:border-primary"
+                        placeholder="Search...">
+                    {% Button type='submit' text='search' size='medium' is_rounded=False %}
+                </form>
+
+            </div>
+
+            <div
+                class="flex flex-col items-center p-4 md:p-0 mt-4 font-medium rounded-lg bg-gray-50 md:gap-2 md:flex-row md:mt-0 md:bg-white divide-x divide-gray-800">
+
+                <a href="" class="group:">
+                    <svg class="w-6 h-6 text-gray-800 hover:text-primary hover:fill-primary" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 19" fill="none">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M11 4C5.5-1.5-1.5 5.5 4 11l7 7 7-7c5.458-5.458-1.542-12.458-7-7Z" />
+                    </svg>
+                    <span class="sr-only">wishlist</span>
+                </a>
+
+                <button data-modal-target="default-modal" data-modal-toggle="default-modal"  class="pl-2 flex gap-4 items-center">
+                    <div class="relative group">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9V4a3 3 0 0 0-6 0v5m9.92 10H2.08a1 1 0 0 1-1-1.077L2 6h14l.917 11.923A1 1 0 0 1 15.92 19Z"/>
+                          </svg>
+                        <span class="sr-only">cart</span>
+
+                        <div
+                            class="absolute inline-flex items-center justify-center w-5 h-5 text-[8px] font-bold text-white bg-primary group-hover:bg-primary-hard border-2 border-white rounded-full -top-2 -end-2">
+                            8
+                        </div>
+                    </div>
+
+                    <div class="flex gap-1 flex-col text-xs text-left font-light text-gray-800">
+                        <span>shopping cart</span>
+                        <span class="font-semibold">$56.00</span>
+                    </div>
+
+                </button>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="bg-gray py-2 px-4">
+    <ul class="flex flex-col p-4 md:px-4 mt-4 md:py-2 md:space-x-8 md:flex-row md:mt-0 md:border-0  max-w-screen-xl mx-auto">
+        <li >
+            <a href=""
+                class="flex items-center justify-between w-full py-2 px-3  {% active_class 'home' %} rounded md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 md:w-auto">Home
+            </a>
+            
+        </li>
+
+        <li>
+            <a href=""
+                class="flex items-center justify-between w-full py-2 px-3 text-gray-500 rounded md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 md:w-auto">Shop
+            </a>
+        </li>
+
+        <li>
+            <a href="" class="flex items-center justify-between w-full py-2 px-3 text-gray-500 rounded md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 md:w-auto">Blog</a>
+        </li>
+
+        <li>
+            <a href="" class="flex items-center justify-between w-full py-2 px-3 text-gray-500 rounded md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 md:w-auto">About Us</a>
+        </li>
+
+        <li>
+            <a href="" class="flex items-center justify-between w-full py-2 px-3 text-gray-500 rounded md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 md:w-auto">Contact Us</a>
+        </li>
+    </ul>
+</div>

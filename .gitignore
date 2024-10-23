@@ -13,3 +13,7 @@ media
 
 # Virtual environment
 .venv
+
+node_modules
+CACHE
+requirements-dev.txt
