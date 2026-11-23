@@ -71,12 +71,12 @@
 
                 <p class="mt-6 text-sm leading-relaxed text-gray-600">{{ product.description }}</p>
 
-                <form class="mt-8 flex flex-wrap items-center gap-4">
+                <form method="post" action="{% url 'cart_add' product.pk %}" class="mt-8 flex flex-wrap items-center gap-4">
                     {% csrf_token %}
                     <div class="flex h-12 items-center rounded-full border border-gray-200">
-                        <button type="button" class="px-4 text-lg text-gray-500" aria-label="Decrease quantity">−</button>
+                        <button type="button" class="px-4 text-lg text-gray-500" aria-label="Decrease quantity" onclick="var i=this.parentElement.querySelector('input');if(i.value>1)i.value--">−</button>
                         <input type="number" name="quantity" value="1" min="1" max="{{ product.stock|default:99 }}" class="w-12 border-0 bg-transparent text-center text-sm focus:ring-0">
-                        <button type="button" class="px-4 text-lg text-gray-500" aria-label="Increase quantity">+</button>
+                        <button type="button" class="px-4 text-lg text-gray-500" aria-label="Increase quantity" onclick="var i=this.parentElement.querySelector('input');if(+i.value<+i.max)i.value++">+</button>
                     </div>
                     <button type="submit" class="shop-btn-primary min-w-[200px] flex-1 justify-center">
                         Add to Cart
@@ -85,8 +85,11 @@
                                 d="M12 9V4a3 3 0 0 0-6 0v5m9.92 10H2.08a1 1 0 0 1-1-1.077L2 6h14l.917 11.923A1 1 0 0 1 15.92 19Z" />
                         </svg>
                     </button>
-                    <button type="button" class="shop-btn-icon" aria-label="Add to wishlist">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 19" fill="none">
+                </form>
+                <form method="post" action="{% url 'wishlist_toggle' product.pk %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="shop-btn-icon" aria-label="{% if in_wishlist %}Remove from wishlist{% else %}Add to wishlist{% endif %}">
+                        <svg class="h-5 w-5 {% if in_wishlist %}fill-primary text-primary{% endif %}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 19" fill="none">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M11 4C5.5-1.5-1.5 5.5 4 11l7 7 7-7c5.458-5.458-1.542-12.458-7-7Z" />
                         </svg>

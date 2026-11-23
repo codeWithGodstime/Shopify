@@ -10,10 +10,10 @@
             <a href="{% url 'order-summary' %}" class="{% dashboard_nav_class 'order-summary' %}">Order history</a>
         </li>
         <li>
-            <a href="{#% url 'wishlist' %#}" class="{% dashboard_nav_class 'wishlist' %}">Wishlist</a>
+            <a href="{% url 'wishlist' %}" class="{% dashboard_nav_class 'wishlist' %}">Wishlist</a>
         </li>
         <li>
-            <a href="" class="{% dashboard_nav_class '' %}">Shopping cart</a>
+            <a href="{% url 'cart' %}" class="{% dashboard_nav_class 'cart' %}">Shopping cart</a>
         </li>
         <li>
             <a href="{% url 'settings' %}" class="{% dashboard_nav_class 'settings' %}">Settings</a>

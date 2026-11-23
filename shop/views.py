@@ -1,9 +1,21 @@
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import models
 from django.db.models import Avg, Q
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.generic import TemplateView
 
+from .cart import (
+    add_to_cart,
+    clear_cart,
+    get_cart_summary,
+    get_wishlist_products,
+    remove_from_cart,
+    toggle_wishlist,
+    update_cart_quantity,
+    wishlist_contains,
+)
 from .models import Product, Tag
 
 
@@ -13,30 +25,28 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = [
-            {"name": "Fresh Fruit", "count": 165, "emoji": "🍎"},
-            {"name": "Vegetables", "count": 132, "emoji": "🥬"},
-            {"name": "Dairy & Eggs", "count": 98, "emoji": "🥚"},
-            {"name": "Meat & Fish", "count": 76, "emoji": "🥩"},
-            {"name": "Snacks", "count": 54, "emoji": "🍿"},
-            {"name": "Beverages", "count": 88, "emoji": "🥤"},
-            {"name": "Bakery", "count": 41, "emoji": "🍞"},
-            {"name": "Organic", "count": 120, "emoji": "🌿"},
-            {"name": "Spices", "count": 37, "emoji": "🌶️"},
-            {"name": "Frozen", "count": 62, "emoji": "🧊"},
+            {"name": "Fresh Fruit", "slug": "fresh fruit", "count": 165, "emoji": "🍎"},
+            {"name": "Vegetables", "slug": "vegetables", "count": 132, "emoji": "🥬"},
+            {"name": "Snacks", "slug": "snacks", "count": 54, "emoji": "🍿"},
+            {"name": "Beverages", "slug": "beverages", "count": 88, "emoji": "🥤"},
+            {"name": "Bakery", "slug": "bread & Bakery", "count": 41, "emoji": "🍞"},
+            {"name": "Cooking", "slug": "cooking", "count": 76, "emoji": "🥩"},
+            {"name": "Beauty", "slug": "beauty & health", "count": 37, "emoji": "🌿"},
+            {"name": "Organic", "slug": "fresh fruit", "count": 120, "emoji": "🌿"},
         ]
-        context["hot_deals"] = [
-            {"title": "Green Apple", "price": "14.99", "original_price": "20.99", "rating": 4, "image": ""},
-            {"title": "Chinese Cabbage", "price": "12.00", "original_price": "17.00", "rating": 5, "image": ""},
-            {"title": "Green Lettuce", "price": "9.50", "original_price": None, "rating": 4, "image": ""},
-            {"title": "Eggplant", "price": "11.25", "original_price": "15.00", "rating": 5, "image": ""},
-        ]
-        context["featured_products"] = [
-            {"title": "Big seasoned potatoes", "price": "18.00", "original_price": "24.00", "rating": 5, "image": ""},
-            {"title": "Red hot tomatoes", "price": "7.50", "original_price": None, "rating": 4, "image": ""},
-            {"title": "Green capsicum", "price": "8.99", "original_price": "11.99", "rating": 5, "image": ""},
-            {"title": "Organic ginger", "price": "6.40", "original_price": None, "rating": 4, "image": ""},
-            {"title": "Fresh corn", "price": "5.99", "original_price": "8.99", "rating": 5, "image": ""},
-        ]
+
+        catalog = list(_product_queryset().order_by("-id"))
+        if catalog:
+            on_sale = [
+                p
+                for p in catalog
+                if p.discount_price and p.discount_price > p.sale_price
+            ]
+            context["hot_deals"] = (on_sale or catalog)[:4]
+            context["featured_products"] = catalog[:5]
+        else:
+            context["hot_deals"] = []
+            context["featured_products"] = []
         return context
 
 
@@ -96,7 +106,11 @@ def product_list(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(
-        _product_queryset().prefetch_related("productreview_set__reviewer"),
+        _product_queryset().prefetch_related(
+            "productreview_set__reviewer",
+            "images",
+            "tags",
+        ),
         pk=pk,
     )
     related_products = (
@@ -116,4 +130,87 @@ def product_detail(request, pk):
         "avg_rating": round(avg_rating, 1) if avg_rating else 0,
         "full_stars": int(avg_rating) if avg_rating else 4,
     }
+    context["in_wishlist"] = wishlist_contains(request.session, product.pk)
     return render(request, "shop/product-detail.html", context)
+
+
+def _redirect_back(request, fallback_name="shop", **fallback_kwargs):
+    next_url = request.POST.get("next") or request.GET.get("next")
+    if next_url:
+        return redirect(next_url)
+    referer = request.META.get("HTTP_REFERER")
+    if referer:
+        return redirect(referer)
+    return redirect(reverse(fallback_name, kwargs=fallback_kwargs))
+
+
+def cart_add(request, pk):
+    if request.method != "POST":
+        return redirect("product_detail", pk=pk)
+    quantity = int(request.POST.get("quantity", 1) or 1)
+    product = add_to_cart(request.session, pk, quantity)
+    messages.success(request, f"Added {product.name} to your cart.")
+    return _redirect_back(request, "product_detail", pk=pk)
+
+
+def cart_remove(request, pk):
+    if request.method == "POST":
+        remove_from_cart(request.session, pk)
+        messages.info(request, "Item removed from cart.")
+    return _redirect_back(request, "cart")
+
+
+def cart_update(request, pk):
+    if request.method == "POST":
+        quantity = int(request.POST.get("quantity", 1) or 1)
+        update_cart_quantity(request.session, pk, quantity)
+    return _redirect_back(request, "cart")
+
+
+def cart_detail(request):
+    summary = get_cart_summary(request.session)
+    return render(
+        request,
+        "shop/cart.html",
+        {"cart_items": summary["items"], "cart_total": summary["total"]},
+    )
+
+
+def checkout(request):
+    summary = get_cart_summary(request.session)
+    if request.method == "POST":
+        if not summary["items"]:
+            messages.warning(request, "Your cart is empty.")
+            return redirect("shop")
+        clear_cart(request.session)
+        messages.success(
+            request,
+            "Order received! Payment processing is not enabled in this demo.",
+        )
+        return redirect("shop")
+
+    if not summary["items"]:
+        messages.info(request, "Add items to your cart before checkout.")
+        return redirect("shop")
+
+    return render(
+        request,
+        "shop/checkout.html",
+        {"cart_items": summary["items"], "cart_total": summary["total"]},
+    )
+
+
+def wishlist(request):
+    products = get_wishlist_products(request.session)
+    return render(request, "shop/wishlist.html", {"products": products})
+
+
+def wishlist_toggle(request, pk):
+    if request.method != "POST":
+        return redirect("product_detail", pk=pk)
+    added = toggle_wishlist(request.session, pk)
+    if added:
+        messages.success(request, "Added to wishlist.")
+    else:
+        messages.info(request, "Removed from wishlist.")
+    return _redirect_back(request, "wishlist")

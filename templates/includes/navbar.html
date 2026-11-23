@@ -60,11 +60,10 @@
                     </svg>
                     <span class="sr-only">Search icon</span>
                 </div>
-                <form action="" class="flex items-center" method="post">
-                    {% csrf_token %}
-                    <input type="text" id="search-navbar"
+                <form action="{% url 'shop' %}" class="flex items-center" method="get">
+                    <input type="search" name="q" id="search-navbar-desktop"
                         class="block w-full p-2 ps-10 text-sm border border-gray-100 text-gray-900 bg-gray-100 focus:ring-primary focus:bg-white focus:border-primary"
-                        placeholder="Search...">
+                        placeholder="Search..." value="{{ request.GET.q }}">
                     {% Button type='submit' text='search' size='medium' is_rounded=False %}
                 </form>
 
@@ -92,11 +91,10 @@
                     </svg>
                 </div>
 
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <input type="search" id="search-navbar"
+                <form action="{% url 'shop' %}" method="get">
+                    <input type="search" name="q" id="search-navbar-mobile"
                         class="block w-full p-2 ps-10 text-sm border border-gray-100 text-gray-900 bg-gray-100 focus:ring-primary focus:border-primary"
-                        placeholder="Search...">
+                        placeholder="Search..." value="{{ request.GET.q }}">
                     {% Button type='submit' text='search' size='medium' is_rounded=False %}
                 </form>
 
@@ -105,7 +103,7 @@
             <div
                 class="flex flex-col items-center p-4 md:p-0 mt-4 font-medium rounded-lg bg-gray-50 md:gap-2 md:flex-row md:mt-0 md:bg-white divide-x divide-gray-800">
 
-                <a href="" class="group:">
+                <a href="{% url 'wishlist' %}" class="pl-2 group" title="Wishlist">
                     <svg class="w-6 h-6 text-gray-800 hover:text-primary hover:fill-primary" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 19" fill="none">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -114,6 +112,15 @@
                     <span class="sr-only">wishlist</span>
                 </a>
 
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="pl-2 text-gray-800 hover:text-primary" title="My account">
+                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M16 19V17a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+                    </svg>
+                    <span class="sr-only">My account</span>
+                </a>
+                {% endif %}
+
                 <button data-modal-target="default-modal" data-modal-toggle="default-modal"  class="pl-2 flex gap-4 items-center">
                     <div class="relative group">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
@@ -121,15 +128,16 @@
                           </svg>
                         <span class="sr-only">cart</span>
 
-                        <div
-                            class="absolute inline-flex items-center justify-center w-5 h-5 text-[8px] font-bold text-white bg-primary group-hover:bg-primary-hard border-2 border-white rounded-full -top-2 -end-2">
-                            8
+                        {% if cart_count %}
+                        <div class="absolute inline-flex items-center justify-center w-5 h-5 text-[8px] font-bold text-white bg-primary group-hover:bg-primary-hard border-2 border-white rounded-full -top-2 -end-2">
+                            {{ cart_count }}
                         </div>
+                        {% endif %}
                     </div>
 
                     <div class="flex gap-1 flex-col text-xs text-left font-light text-gray-800">
                         <span>shopping cart</span>
-                        <span class="font-semibold">$56.00</span>
+                        <span class="font-semibold">${{ cart_total }}</span>
                     </div>
 
                 </button>
@@ -149,8 +157,8 @@
         </li>
 
         <li>
-            <a href=""
-                class="flex items-center justify-between w-full py-2 px-3 text-gray-500 rounded md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 md:w-auto">Shop
+            <a href="{% url 'shop' %}"
+                class="flex items-center justify-between w-full py-2 px-3 font-medium {% active_class 'shop' %} rounded md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 md:w-auto">Shop
             </a>
         </li>
 

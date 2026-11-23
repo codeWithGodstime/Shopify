@@ -18,7 +18,7 @@
             Sale up to <span class="text-warning font-semibold">30% OFF</span> on your first order. Farm-fresh produce delivered to your door.
           </p>
           <div class="mt-8">
-            {% url 'home' as shop_url %}
+            {% url 'shop' as shop_url %}
             <a href="{{ shop_url }}#hot-deals" class="inline-flex items-center gap-3 px-8 py-3 rounded-pill bg-primary text-white font-medium hover:bg-primary-hard transition-colors">
               Shop Now
               <svg class="w-4 h-4" fill="none" viewBox="0 0 14 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -82,7 +82,7 @@
     <h2 class="text-2xl md:text-3xl font-semibold text-ink text-center mb-10">Popular Categories</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
       {% for category in categories %}
-      <a href="#" class="group bg-white border border-greenGray-100 hover:border-primary-soft rounded-lg p-6 text-center transition-colors shadow-sm hover:shadow-md">
+      <a href="{% url 'shop' %}?category={{ category.slug|urlencode }}" class="group bg-white border border-greenGray-100 hover:border-primary-soft rounded-lg p-6 text-center transition-colors shadow-sm hover:shadow-md">
         <div class="w-20 h-20 mx-auto rounded-full bg-greenGray-50 group-hover:bg-greenGray-100 flex items-center justify-center text-3xl" aria-hidden="true">{{ category.emoji }}</div>
         <p class="mt-4 text-ink font-medium text-sm md:text-base">{{ category.name }}</p>
         <p class="text-muted text-xs mt-1">{{ category.count }} Products</p>
@@ -116,11 +116,13 @@
   <section id="hot-deals" class="max-w-screen-xl mx-auto px-4 pb-16 md:pb-20">
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
       <h2 class="text-2xl md:text-3xl font-semibold text-ink">Hot Deals</h2>
-      <a href="#" class="text-primary font-medium text-sm hover:text-primary-hard transition-colors">View All →</a>
+      <a href="{% url 'shop' %}" class="text-primary font-medium text-sm hover:text-primary-hard transition-colors">View All →</a>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {% for product in hot_deals %}
-      {% include "shop/partials/product-card.html" with title=product.title price=product.price original_price=product.original_price rating=product.rating image=product.image only %}
+        {% include "partials/product_card.html" %}
+      {% empty %}
+      <p class="col-span-full text-center text-sm text-gray-500">Run <code>python manage.py seed_products</code> to load catalog items.</p>
       {% endfor %}
     </div>
   </section>
@@ -144,11 +146,11 @@
     <div class="max-w-screen-xl mx-auto px-4">
       <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <h2 class="text-2xl md:text-3xl font-semibold text-ink">Featured Products</h2>
-        <a href="#" class="text-primary font-medium text-sm hover:text-primary-hard transition-colors">View All →</a>
+        <a href="{% url 'shop' %}" class="text-primary font-medium text-sm hover:text-primary-hard transition-colors">View All →</a>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
         {% for product in featured_products %}
-        {% include "shop/partials/product-card.html" with title=product.title price=product.price original_price=product.original_price rating=product.rating image=product.image only %}
+          {% include "partials/product_card.html" %}
         {% endfor %}
       </div>
     </div>

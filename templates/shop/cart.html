@@ -1,0 +1,58 @@
+{% extends "shop/base.html" %}
+{% load shop_tags %}
+
+{% block title %}Cart – Shopery{% endblock title %}
+
+{% block content %}
+<main class="bg-white pb-16">
+    <div class="mx-auto max-w-screen-xl px-4 py-10 sm:px-6">
+        <h1 class="text-3xl font-semibold text-gray-900">Shopping Cart</h1>
+
+        {% if cart_items %}
+        <ul class="mt-10 space-y-6">
+            {% for item in cart_items %}
+            <li class="grid grid-cols-1 gap-4 border-b border-gray-100 pb-6 sm:grid-cols-[120px_1fr_auto] sm:items-center">
+                {% with image_url=item.product|product_image_url %}
+                {% if image_url %}
+                <img src="{{ image_url }}" alt="{{ item.product.name }}" class="h-24 w-24 rounded-lg border border-gray-100 object-contain p-2">
+                {% endif %}
+                {% endwith %}
+
+                <div>
+                    <a href="{% url 'product_detail' item.product.pk %}" class="text-lg font-semibold text-gray-900 hover:text-primary">{{ item.product.name }}</a>
+                    <p class="mt-1 text-sm text-gray-600">${{ item.product.sale_price }} each</p>
+                    <form method="post" action="{% url 'cart_update' item.product.pk %}" class="mt-3 flex items-center gap-2">
+                        {% csrf_token %}
+                        <label class="text-sm text-gray-600" for="qty-{{ item.product.pk }}">Qty</label>
+                        <input id="qty-{{ item.product.pk }}" type="number" name="quantity" value="{{ item.quantity }}" min="1" class="w-16 rounded border border-gray-200 px-2 py-1 text-sm">
+                        <button type="submit" class="text-sm font-medium text-primary hover:text-primary-hard">Update</button>
+                    </form>
+                </div>
+
+                <div class="flex flex-col items-end gap-3">
+                    <p class="text-lg font-semibold text-gray-900">${{ item.line_total }}</p>
+                    <form method="post" action="{% url 'cart_remove' item.product.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-sm text-gray-500 hover:text-danger">Remove</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="mt-10 flex flex-col items-end gap-4 border-t border-gray-200 pt-8">
+            <p class="text-xl font-semibold text-gray-900">Total: ${{ cart_total }}</p>
+            <div class="flex flex-wrap gap-3">
+                <a href="{% url 'shop' %}" class="inline-flex items-center justify-center rounded-pill border-2 border-primary px-6 py-2 text-sm font-medium text-primary hover:bg-primary-soft">Continue Shopping</a>
+                <a href="{% url 'checkout' %}" class="shop-btn-primary">Checkout</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="mt-10 rounded-xl border border-dashed border-gray-200 bg-gray-50 px-6 py-16 text-center">
+            <p class="text-lg font-medium text-gray-800">Your cart is empty.</p>
+            <a href="{% url 'shop' %}" class="mt-4 inline-block text-sm font-medium text-primary hover:text-primary-hard">Browse the shop</a>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock content %}

@@ -16,12 +16,15 @@
         {% endif %}
     </a>
 
-    <button type="button" class="product-card__wishlist" aria-label="Add to wishlist">
-        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 19" fill="none">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                d="M11 4C5.5-1.5-1.5 5.5 4 11l7 7 7-7c5.458-5.458-1.542-12.458-7-7Z" />
-        </svg>
-    </button>
+    <form method="post" action="{% url 'wishlist_toggle' product.pk %}" class="contents">
+        {% csrf_token %}
+        <button type="submit" class="product-card__wishlist" aria-label="Add to wishlist">
+            <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 19" fill="none">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M11 4C5.5-1.5-1.5 5.5 4 11l7 7 7-7c5.458-5.458-1.542-12.458-7-7Z" />
+            </svg>
+        </button>
+    </form>
 
     <div class="product-card__body">
         <div class="min-w-0 flex-1">
@@ -34,13 +37,17 @@
             </p>
             {% include "partials/product_stars.html" with stars=rating %}
         </div>
-        <button type="button" class="product-card__cart" aria-label="Add {{ product.name }} to cart">
-            <svg class="h-5 w-5 text-gray-800 group-hover/product:text-white" aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                    d="M12 9V4a3 3 0 0 0-6 0v5m9.92 10H2.08a1 1 0 0 1-1-1.077L2 6h14l.917 11.923A1 1 0 0 1 15.92 19Z" />
-            </svg>
-        </button>
+        <form method="post" action="{% url 'cart_add' product.pk %}" class="m-0">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="product-card__cart" aria-label="Add {{ product.name }} to cart">
+                <svg class="h-5 w-5 text-gray-800 group-hover/product:text-white" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M12 9V4a3 3 0 0 0-6 0v5m9.92 10H2.08a1 1 0 0 1-1-1.077L2 6h14l.917 11.923A1 1 0 0 1 15.92 19Z" />
+                </svg>
+            </button>
+        </form>
     </div>
 </article>
 {% endwith %}

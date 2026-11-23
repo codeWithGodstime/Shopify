@@ -1,16 +1,17 @@
 from django import template
-from django.urls import resolve, reverse
+from django.template.loader import render_to_string
+from django.urls import resolve
 from django.utils.html import format_html
-
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
-@register.inclusion_tag('partials/buttons.html')
+
+@register.simple_tag
 def Button(type='button', text=None, size='small', style='fill', has_icon=False, is_rounded=True):
     """
         style = fill, border, shadow
         size = small, medium, large
-
     """
     classes = 'rounded-pill '
 
@@ -19,7 +20,7 @@ def Button(type='button', text=None, size='small', style='fill', has_icon=False,
     elif size == 'medium':
         classes += 'px-8 py-1.5'
     elif size == 'large':
-        classes += 'px-12 py-2' 
+        classes += 'px-12 py-2'
 
     if style == 'fill':
         classes += ' bg-primary text-white hover:bg-primary-hard'
@@ -28,17 +29,18 @@ def Button(type='button', text=None, size='small', style='fill', has_icon=False,
     elif style == 'shadow':
         classes += ' bg-[#56AC591A] text-primary hover:text-primary-hard hover:bg-[#2C742F33]'
 
-    if is_rounded == False:
+    if is_rounded is False:
         classes = classes.replace('rounded-pill', 'rounded-lg')
-    print(classes)
-    return {
-        'text': text,
-        'size': size,
-        'style': style,
-        'classes': classes,
-        'has_icon': has_icon, 
-        'type': type
-        }
+
+    label = text or 'Button'
+    icon_html = mark_safe('<img src="" alt="button icons">') if has_icon else mark_safe('')
+    return format_html(
+        '<button type="{}" class="{} flex items-center gap-3 duration-100 transition-all">{}{}</button>',
+        type,
+        classes,
+        label,
+        icon_html,
+    )
 
 
 @register.simple_tag(takes_context=True)
@@ -60,20 +62,24 @@ def dashboard_nav_class(context, url_name):
         return f'{base} dashboard-nav-link-active'
     return base
 
-@register.inclusion_tag('partials/breadcrumb.html', takes_context=True)
+
+@register.simple_tag(takes_context=True)
 def breadcrumb(context):
     request = context['request']
     path = request.path.strip('/').split('/')
-    
-    # Prepare breadcrumb items
-    breadcrumb_items = [{'name': 'Home', 'url': '/'}]  # Home link
-    
+
+    breadcrumb_items = [{'name': 'Home', 'url': '/'}]
+
     for i in range(len(path)):
+        if not path[i]:
+            continue
         breadcrumb_items.append({
             'name': path[i].capitalize(),
-            'url': '/' + '/'.join(path[:i + 1]) + '/'
+            'url': '/' + '/'.join(path[:i + 1]) + '/',
         })
-    print(breadcrumb_items)
-    return {
-        'breadcrumb_items': breadcrumb_items
-    }
+
+    return render_to_string(
+        'partials/breadcrumb.html',
+        {'breadcrumb_items': breadcrumb_items},
+        request=request,
+    )
