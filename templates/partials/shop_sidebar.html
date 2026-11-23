@@ -1,0 +1,72 @@
+{% load shop_tags %}
+<aside class="shop-sidebar space-y-8">
+    <section>
+        <h2 class="shop-sidebar__heading">All Categories</h2>
+        <ul class="mt-3 space-y-1">
+            {% for value, label in categories %}
+            <li>
+                <a href="?category={{ value|urlencode }}&sort={{ sort }}{% if active_tag %}&tag={{ active_tag|urlencode }}{% endif %}"
+                    class="shop-filter-link{% if active_category == value %} shop-filter-link--active{% endif %}">
+                    {{ label|title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <div class="border-t border-gray-200"></div>
+
+    <section>
+        <h2 class="shop-sidebar__heading">Price Range</h2>
+        <p class="mt-3 text-sm text-gray-600">Price: $50 — $1,500</p>
+        <div class="mt-4 h-1.5 rounded-full bg-gray-200">
+            <div class="h-full w-2/3 rounded-full bg-primary"></div>
+        </div>
+    </section>
+
+    <div class="border-t border-gray-200"></div>
+
+    <section>
+        <h2 class="shop-sidebar__heading">Popular Tag</h2>
+        <div class="mt-3 flex flex-wrap gap-2">
+            {% for tag in tags %}
+            <a href="?tag={{ tag.name|urlencode }}&sort={{ sort }}{% if active_category %}&category={{ active_category|urlencode }}{% endif %}"
+                class="shop-tag{% if active_tag == tag.name %} shop-tag--active{% endif %}">
+                {{ tag.name }}
+            </a>
+            {% empty %}
+            <p class="text-sm text-gray-500">No tags yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% if sale_products %}
+    <div class="border-t border-gray-200"></div>
+    <section>
+        <h2 class="shop-sidebar__heading">Sale Products</h2>
+        <ul class="mt-4 space-y-4">
+            {% for item in sale_products %}
+            {% with image_url=item|product_image_url sale_pct=item|discount_percent %}
+            <li class="flex gap-3">
+                {% if image_url %}
+                <img src="{{ image_url }}" alt="" class="h-16 w-16 shrink-0 rounded border border-gray-100 object-contain">
+                {% endif %}
+                <div class="min-w-0">
+                    <a href="{% url 'product_detail' item.pk %}" class="text-sm font-medium text-gray-800 hover:text-primary">{{ item.name }}</a>
+                    <p class="text-sm">
+                        <span class="font-medium text-gray-900">${{ item.sale_price }}</span>
+                        {% if item.discount_price > item.sale_price %}
+                        <span class="text-gray-400 line-through">${{ item.discount_price }}</span>
+                        {% endif %}
+                    </p>
+                    {% if sale_pct %}
+                    <span class="product-badge mt-1 inline-flex scale-90 origin-left">Sale {{ sale_pct }}%</span>
+                    {% endif %}
+                </div>
+            </li>
+            {% endwith %}
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+</aside>

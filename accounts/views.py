@@ -48,7 +48,10 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
 class OrderListView(LoginRequiredMixin, ListView):
     context_object_name ="orders"
     template_name = "account/dashboard/order_history.html"
-    queryset = Order.objects.all()
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user).order_by("-created_at")
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):

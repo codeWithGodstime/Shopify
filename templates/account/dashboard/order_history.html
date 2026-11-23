@@ -1,96 +1,72 @@
 {% extends 'account/dashboard/base.html' %}
 
-{% block title %}Dashboard Main - {{request.user}}{% endblock %}
+{% block title %}Order history - {{ request.user }}{% endblock %}
 
 {% block dashboard %}
-<div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8">
-    <div class="flex items-center justify-between mb-4">
-        <h5 class="text-xl font-bold leading-none text-gray-900">Order history</h5>
-        <!-- <a href="#" class="text-sm font-medium text-primary hover:underline">
-            View all
-        </a> -->
-    </div>
+<section class="dashboard-panel">
+    <header class="mb-5">
+        <h1 class="font-display text-2xl font-semibold tracking-tight text-gray-900">Order history</h1>
+        <p class="mt-1 text-sm text-greenGray-600">Track and review your past purchases.</p>
+    </header>
 
-
-    <div class="relative overflow-x-auto sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+    <div class="dashboard-table-wrap">
+        <table class="dashboard-table">
+            <thead>
                 <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Order ID
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Date
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Total
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Status
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        <span class="sr-only">Edit</span>
-                    </th>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Total</th>
+                    <th scope="col"><span class="sr-only">Actions</span></th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-white border-b">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        Apple MacBook Pro 17"
-                    </th>
-                    <td class="px-6 py-4">
-                        Silver
+                {% for order in orders %}
+                <tr>
+                    <th scope="row">#{{ order.id }}</th>
+                    <td>{{ order.created_at|date:"M j, Y" }}</td>
+                    <td>
+                        <span class="inline-flex rounded-pill bg-greenGray-100 px-3 py-1 text-xs font-medium text-greenGray-800">
+                            {{ order.status }}
+                        </span>
                     </td>
-                    <td class="px-6 py-4">
-                        Laptop
-                    </td>
-                    <td class="px-6 py-4">
-                        $2999
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="#" class="font-medium text-primary hover:underline">VIew details</a>
+                    <td class="font-medium text-gray-900">₦{{ order.total_price }}</td>
+                    <td class="text-right">
+                        <a href="{% url 'order-detail' order.pk %}" class="text-sm font-semibold text-primary hover:text-primary-hard">View details</a>
                     </td>
                 </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="py-10 text-center text-sm text-greenGray-600">You have not placed any orders yet.</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
-
-        <!-- pagination -->
-        <nav class="mx-auto mt-5 flex justify-center" aria-label="Page navigation example">
-            <ul class="inline-flex -space-x-px text-sm">
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                </li>
-                <li>
-                    <a href="#" aria-current="page"
-                        class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">4</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">5</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
-                </li>
-            </ul>
-        </nav>
-
-
     </div>
 
-</div>
+    {% if is_paginated %}
+    <nav class="mx-auto mt-6 flex justify-center" aria-label="Order pagination">
+        <ul class="inline-flex overflow-hidden rounded-lg border border-gray-200 text-sm">
+            {% if page_obj.has_previous %}
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}"
+                    class="flex h-9 items-center border-r border-gray-200 bg-white px-4 text-greenGray-600 hover:bg-greenGray-50 hover:text-gray-900">Previous</a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li>
+                <a href="?page={{ num }}"
+                    class="flex h-9 items-center border-r border-gray-200 px-4 {% if page_obj.number == num %}bg-primary text-white{% else %}bg-white text-greenGray-600 hover:bg-greenGray-50{% endif %}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li>
+                <a href="?page={{ page_obj.next_page_number }}"
+                    class="flex h-9 items-center bg-white px-4 text-greenGray-600 hover:bg-greenGray-50 hover:text-gray-900">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</section>
 {% endblock %}

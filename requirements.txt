@@ -1,6 +1,8 @@
 Django==5.1.2
 django-allauth==65.0.2
+django-compressor==4.6.0
 gunicorn
+Pillow==13.0.0
 psycopg
 psycopg-binary
 urllib3==1.26.14

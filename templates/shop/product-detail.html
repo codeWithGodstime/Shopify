@@ -1,0 +1,126 @@
+{% extends "shop/base.html" %}
+{% load shop_tags static %}
+
+{% block title %}{{ product.name }} – Shopery{% endblock title %}
+
+{% block content %}
+<main class="bg-white pb-20">
+    <a class="sr-only" href="#product-main">Skip to product details</a>
+    <div id="product-main" class="mx-auto max-w-screen-xl px-4 py-10 sm:px-6">
+        <div class="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+            <section class="flex flex-col gap-4 sm:flex-row">
+                {% with images=product.images.all %}
+                <div class="order-2 flex gap-2 sm:order-1 sm:flex-col">
+                    {% for image in images|slice:":4" %}
+                    <button type="button" class="product-thumb{% if forloop.first %} product-thumb--active{% endif %}">
+                        <img src="{{ image.image.url }}" alt="{{ image.alt|default:product.name }}" class="h-full w-full object-contain">
+                    </button>
+                    {% empty %}
+                    <div class="product-thumb product-thumb--active flex items-center justify-center text-xs text-gray-400">No image</div>
+                    {% endfor %}
+                </div>
+                <div class="order-1 flex-1 sm:order-2">
+                    {% with image_url=product|product_image_url %}
+                    {% if image_url %}
+                    <img src="{{ image_url }}" alt="{{ product.name }}" class="w-full max-h-[520px] rounded-lg border border-gray-100 object-contain p-4">
+                    {% endif %}
+                    {% endwith %}
+                </div>
+                {% endwith %}
+            </section>
+
+            <section>
+                <div class="flex flex-wrap items-center gap-3">
+                    <h1 class="text-3xl font-semibold capitalize text-gray-900">{{ product.name }}</h1>
+                    {% if product.stock %}
+                    <span class="product-stock-badge">In Stock</span>
+                    {% else %}
+                    <span class="product-stock-badge product-stock-badge--out">Out of Stock</span>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-600">
+                    {% include "partials/product_stars.html" with stars=full_stars size_class="w-4 h-4" %}
+                    <span>{{ review_count }} Review{{ review_count|pluralize }}</span>
+                    <span aria-hidden="true">•</span>
+                    <span>SKU: <span class="text-gray-800">{{ product.pk|stringformat:"05d" }}</span></span>
+                </div>
+
+                {% with sale_pct=product|discount_percent %}
+                <div class="mt-6 flex flex-wrap items-end gap-3 border-b border-gray-200 pb-6">
+                    <p class="text-3xl font-semibold text-gray-900">${{ product.sale_price }}</p>
+                    {% if product.discount_price > product.sale_price %}
+                    <p class="text-2xl text-gray-400 line-through">${{ product.discount_price }}</p>
+                    {% if sale_pct %}
+                    <span class="rounded bg-danger/10 px-3 py-1 text-sm font-medium text-danger">{{ sale_pct }}% Off</span>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endwith %}
+
+                <div class="mt-6 flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-medium text-gray-700">Brand:</span>
+                        {% if product.brand %}
+                        <img src="{{ product.brand.url }}" alt="Brand" class="h-12 w-12 rounded border border-gray-100 object-contain p-1">
+                        {% else %}
+                        <span class="text-sm text-gray-500">Shopery Farms</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <p class="mt-6 text-sm leading-relaxed text-gray-600">{{ product.description }}</p>
+
+                <form class="mt-8 flex flex-wrap items-center gap-4">
+                    {% csrf_token %}
+                    <div class="flex h-12 items-center rounded-full border border-gray-200">
+                        <button type="button" class="px-4 text-lg text-gray-500" aria-label="Decrease quantity">−</button>
+                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock|default:99 }}" class="w-12 border-0 bg-transparent text-center text-sm focus:ring-0">
+                        <button type="button" class="px-4 text-lg text-gray-500" aria-label="Increase quantity">+</button>
+                    </div>
+                    <button type="submit" class="shop-btn-primary min-w-[200px] flex-1 justify-center">
+                        Add to Cart
+                        <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 9V4a3 3 0 0 0-6 0v5m9.92 10H2.08a1 1 0 0 1-1-1.077L2 6h14l.917 11.923A1 1 0 0 1 15.92 19Z" />
+                        </svg>
+                    </button>
+                    <button type="button" class="shop-btn-icon" aria-label="Add to wishlist">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 19" fill="none">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M11 4C5.5-1.5-1.5 5.5 4 11l7 7 7-7c5.458-5.458-1.542-12.458-7-7Z" />
+                        </svg>
+                    </button>
+                </form>
+
+                <dl class="mt-8 space-y-2 text-sm text-gray-600">
+                    <div class="flex gap-2">
+                        <dt class="font-medium text-gray-800">Category:</dt>
+                        <dd class="capitalize">{{ product.get_category_display }}</dd>
+                    </div>
+                    {% if product.tags.exists %}
+                    <div class="flex flex-wrap gap-2">
+                        <dt class="w-full font-medium text-gray-800 sm:w-auto">Tag:</dt>
+                        {% for tag in product.tags.all %}
+                        <dd><a href="{% url 'shop' %}?tag={{ tag.name|urlencode }}" class="shop-tag shop-tag--inline">{{ tag.name }}</a></dd>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </dl>
+            </section>
+        </div>
+
+        {% if related_products %}
+        <section class="mt-20 border-t border-gray-200 pt-12">
+            <h2 class="text-2xl font-semibold text-gray-900">Related Products</h2>
+            <p class="mt-1 text-sm text-gray-600">More fresh picks from {{ product.get_category_display }}</p>
+            <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {% for related in related_products %}
+                    {% include "partials/product_card.html" with product=related %}
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</main>
+{% endblock content %}

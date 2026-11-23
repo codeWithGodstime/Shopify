@@ -12,7 +12,7 @@ def Button(type='button', text=None, size='small', style='fill', has_icon=False,
         size = small, medium, large
 
     """
-    classes = 'rounded-4xl '
+    classes = 'rounded-pill '
 
     if size == 'small':
         classes += 'px-5 py-1'
@@ -29,7 +29,7 @@ def Button(type='button', text=None, size='small', style='fill', has_icon=False,
         classes += ' bg-[#56AC591A] text-primary hover:text-primary-hard hover:bg-[#2C742F33]'
 
     if is_rounded == False:
-        classes = classes.replace('rounded-4xl', '')
+        classes = classes.replace('rounded-pill', 'rounded-lg')
     print(classes)
     return {
         'text': text,
@@ -46,6 +46,19 @@ def active_class(context, url_name):
     request = context['request']
     current_url_name = resolve(request.path_info).url_name
     return 'text-primary' if current_url_name == url_name else ' text-gray-500'
+
+
+@register.simple_tag(takes_context=True)
+def dashboard_nav_class(context, url_name):
+    request = context['request']
+    try:
+        current_url_name = resolve(request.path_info).url_name
+    except Exception:
+        current_url_name = None
+    base = 'dashboard-nav-link'
+    if current_url_name == url_name:
+        return f'{base} dashboard-nav-link-active'
+    return base
 
 @register.inclusion_tag('partials/breadcrumb.html', takes_context=True)
 def breadcrumb(context):

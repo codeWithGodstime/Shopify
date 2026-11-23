@@ -6,9 +6,9 @@ module.exports = {
   theme: {
     colors: {
       "primary": {
-        "soft": "#84D!87",
+        "soft": "#84D187",
         "DEFAULT": "#00B207",
-        "hard": "#2c742f"
+        "hard": "#2C742F"
       },
       "danger": "#EA4B48",
       "white": "#FFFFFF",
@@ -26,21 +26,35 @@ module.exports = {
         "800": "#1F2937",
         "900": "#111827"
       },
-      // Adding green-gray shades from Tailwind
       "greenGray": {
-        "50": "#F3FAF9",
-        "100": "#DDF3EC",
-        "200": "#BDE5D9",
-        "300": "#99D3C2",
-        "400": "#66B59C",
-        "500": "#439376",
-        "600": "#367861",
-        "700": "#285E4B",
-        "800": "#1C4335",
-        "900": "#0F281F"
+        "50": "#EDF2EE",
+        "100": "#DAE5DA",
+        "200": "#B4CCB4",
+        "300": "#96B297",
+        "400": "#7A997C",
+        "500": "#618062",
+        "600": "#406B42",
+        "700": "#2B572E",
+        "800": "#173B1A",
+        "900": "#002603"
       }
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      borderRadius: {
+        pill: '43px',
+      },
+      boxShadow: {
+        featured: '0px 8px 20px rgba(0, 38, 3, 0.08)',
+      },
+      colors: {
+        ink: '#1A1A1A',
+        muted: '#999999',
+      },
+    },
   },
   plugins: [
     require('flowbite/plugin') // Flowbite plugin for interactive components
