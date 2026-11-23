@@ -4,12 +4,42 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-0peo@#x9jur3!h$ryje!$879xww8y1y66jx!%*#ymhg&jkozs2"
+IS_RENDER = os.environ.get("RENDER") == "true"
 
-DEBUG = True
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-0peo@#x9jur3!h$ryje!$879xww8y1y66jx!%*#ymhg&jkozs2",
+)
+
+DEBUG = os.environ.get("DEBUG", "false" if IS_RENDER else "true").lower() in (
+    "true",
+    "1",
+    "yes",
+)
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_hostname:
+    ALLOWED_HOSTS.append(render_hostname)
+if IS_RENDER:
+    ALLOWED_HOSTS.append(".onrender.com")
+extra_hosts = os.environ.get("ALLOWED_HOSTS", "")
+if extra_hosts:
+    ALLOWED_HOSTS.extend(host.strip() for host in extra_hosts.split(",") if host.strip())
+
+CSRF_TRUSTED_ORIGINS = []
+render_url = os.environ.get("RENDER_EXTERNAL_URL")
+if render_url:
+    CSRF_TRUSTED_ORIGINS.append(render_url.rstrip("/"))
+if render_hostname:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_hostname}")
+if IS_RENDER:
+    CSRF_TRUSTED_ORIGINS.append("https://*.onrender.com")
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -135,9 +165,13 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 COMPRESS_ROOT = BASE_DIR / 'static'
 
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = DEBUG
 
-STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+]
 
 # https://whitenoise.readthedocs.io/en/latest/django.html
 STORAGES = {
@@ -145,7 +179,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 

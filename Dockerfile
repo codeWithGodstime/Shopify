@@ -23,5 +23,5 @@ COPY . /code/
 # Expose port 8000
 EXPOSE 8000
 
-# Use gunicorn on port 8000
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "shopify.wsgi"]
+# Use gunicorn on $PORT (Render) or 8000 locally
+CMD gunicorn --bind 0.0.0.0:${PORT:-8000} --workers 1 shopify.wsgi
